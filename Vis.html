@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шифр Вижинера</title>
+    <script>
+        function vigenereCipher(text, key, decrypt = false) {
+            const alphabet = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+            text = text.toUpperCase();
+            key = key.toUpperCase();
+            let result = "";
+            let keyIndex = 0;
+            
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i];
+                let textIndex = alphabet.indexOf(char);
+                
+                if (textIndex !== -1) {
+                    let keyChar = key[keyIndex % key.length];
+                    let keyIndexValue = alphabet.indexOf(keyChar);
+                    let newIndex;
+                    
+                    if (decrypt) {
+                        newIndex = (textIndex - keyIndexValue + alphabet.length) % alphabet.length;
+                    } else {
+                        newIndex = (textIndex + keyIndexValue) % alphabet.length;
+                    }
+                    
+                    result += alphabet[newIndex];
+                    keyIndex++;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+        
+        function encryptText() {
+            let text = document.getElementById("inputText").value;
+            let key = document.getElementById("key").value;
+            document.getElementById("outputText").value = vigenereCipher(text, key);
+        }
+        
+        function decryptText() {
+            let text = document.getElementById("encryptedText").value;
+            let key = document.getElementById("decryptKey").value;
+            document.getElementById("decryptedText").value = vigenereCipher(text, key, true);
+        }
+    </script>
+</head>
+<body>
+    <h2>Шифр Вижинера</h2>
+    <div>
+        <h3>Шифрование</h3>
+        <textarea id="inputText" placeholder="Введите текст..."></textarea>
+        <input type="text" id="key" placeholder="Ключ">
+        <button onclick="encryptText()">Шифровать</button>
+        <textarea id="outputText" placeholder="Результат" readonly></textarea>
+    </div>
+    <div>
+        <h3>Дешифрование</h3>
+        <textarea id="encryptedText" placeholder="Введите зашифрованный текст..."></textarea>
+        <input type="text" id="decryptKey" placeholder="Ключ">
+        <button onclick="decryptText()">Расшифровать</button>
+        <textarea id="decryptedText" placeholder="Результат" readonly></textarea>
+    </div>
+</body>
+</html>
